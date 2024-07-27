@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:testdb/register.dart';
+import 'package:testdb/screens/register.dart';
 import 'package:testdb/screens/notificationscreen.dart';
 import 'package:testdb/screens/otp.dart';
 import 'package:testdb/screens/profile.dart';

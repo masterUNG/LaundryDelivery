@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:testdb/register.dart';
+import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:testdb/screens/register.dart';
 import 'package:testdb/screens/forget.dart';
 import 'package:testdb/screens/home.dart';
+import 'package:testdb/widgets/widget_button.dart';
 import 'package:testdb/widgets/widget_form.dart';
 
 class LoginPage extends StatefulWidget {
@@ -136,7 +139,9 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           const SizedBox(height: 30),
+
           _buildRememberForget(),
+
           const SizedBox(height: 20),
 
           _buildLoginButton(),
@@ -170,33 +175,27 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Checkbox(
-                value: rememberUser,
-                onChanged: (value) {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Register(),
-                        ));
-                  });
-                }),
-            _buildGreyText("สมัครสมาชิก"),
-          ],
+        WidgetButton(
+          text: 'สมัครสมาชิก',
+          onPressed: () {
+            Get.to(const Register());
+          },
+          type: GFButtonType.transparent,
+          textStyle: const TextStyle(
+              fontSize: 16, color: Colors.blue, fontWeight: FontWeight.w300),
         ),
-        TextButton(
-            onPressed: () {
-              setState(() {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Forget(),
-                    ));
-              });
-            },
-            child: _buildGreyText("ลืมรหัสผ่าน")),
+
+        WidgetButton(
+          text: 'ลืมรหัสผ่าน',
+          onPressed: () {
+            Get.to(Forget());
+          },
+          type: GFButtonType.transparent,
+          textStyle: const TextStyle(
+              fontSize: 16, color: Colors.blue, fontWeight: FontWeight.w300),
+        ),
+
+       
       ],
     );
   }
@@ -204,16 +203,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () {
-
-
-        if (keyForm.currentState!.validate()) {
-          
-        }
-
-
-
-
-
+        if (keyForm.currentState!.validate()) {}
 
         // debugPrint("Email :${emailController.text}");
         // debugPrint("Password : ${passwordController.text}");
