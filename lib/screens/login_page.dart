@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testdb/register.dart';
 import 'package:testdb/screens/forget.dart';
 import 'package:testdb/screens/home.dart';
+import 'package:testdb/widgets/widget_form.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,6 +17,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
+
+  final keyForm = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -87,28 +90,61 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "ซักรีดออนไลน์",
-          style: TextStyle(
-              color: mycolor, fontSize: 32, fontWeight: FontWeight.w500),
-        ),
-        Text("Please Login with your in fromation"),
-        const SizedBox(height: 60),
-        _buildGreyText("Email Address"),
-        _buildInputField(emailController),
-        const SizedBox(height: 40),
-        _buildGreyText("Password"),
-        _buildInputField(passwordController, isPassword: true),
-        const SizedBox(height: 30),
-        _buildRememberForget(),
-        const SizedBox(height: 20),
-        _buildLoginButton(),
-        const SizedBox(height: 20),
-        _buildOtherLogin(),
-      ],
+    return Form(
+      key: keyForm,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "ซักรีดออนไลน์",
+            style: TextStyle(
+                color: mycolor, fontSize: 32, fontWeight: FontWeight.w500),
+          ),
+
+          const Text("Please Login with your in fromation"),
+
+          const SizedBox(height: 60),
+
+          _buildGreyText("Email Address"),
+
+          // _buildInputField(emailController),
+          WidgetForm(
+            controller: emailController,
+            validator: (p0) {
+              if (p0?.isEmpty ?? true) {
+                return 'Please Fill Email';
+              } else {
+                return null;
+              }
+            },
+          ),
+
+          const SizedBox(height: 40),
+
+          _buildGreyText("Password"),
+
+          // _buildInputField(passwordController, isPassword: true),
+          WidgetForm(
+            controller: passwordController,
+            validator: (p0) {
+              if (p0?.isEmpty ?? true) {
+                return 'Please Fill Password';
+              } else {
+                return null;
+              }
+            },
+          ),
+
+          const SizedBox(height: 30),
+          _buildRememberForget(),
+          const SizedBox(height: 20),
+
+          _buildLoginButton(),
+
+          const SizedBox(height: 20),
+          _buildOtherLogin(),
+        ],
+      ),
     );
   }
 
@@ -168,15 +204,26 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("Email :${emailController.text}");
-        debugPrint("Password : ${passwordController.text}");
-        setState(() {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Home(),
-              ));
-        });
+
+
+        if (keyForm.currentState!.validate()) {
+          
+        }
+
+
+
+
+
+
+        // debugPrint("Email :${emailController.text}");
+        // debugPrint("Password : ${passwordController.text}");
+        // setState(() {
+        //   Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => Home(),
+        //       ));
+        // });
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
