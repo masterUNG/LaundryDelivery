@@ -64,7 +64,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  primary: Colors.blue,
+                  // primary: Colors.blue,
                 ),
                 child: Text(
                   'RESET',

@@ -110,7 +110,7 @@ class EditProfileScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 168, 213, 35),
+                // primary: Color.fromARGB(255, 168, 213, 35),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 textStyle: TextStyle(
                   fontSize: 15,
@@ -126,7 +126,7 @@ class EditProfileScreen extends StatelessWidget {
             TextButton(
               onPressed: () {},
               style: TextButton.styleFrom(
-                primary: Colors.red,
+                // primary: Colors.red,
               ),
               child: Text('Delete'),
             ),
