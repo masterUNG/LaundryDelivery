@@ -1,13 +1,54 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_dialog.dart';
 import 'package:testdb/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  Future<void> processRegister({
+    required String name,
+    required String surName,
+    required String phoneNumber,
+    required String address,
+    required String email,
+    required String password,
+    required String lat,
+    required String lng,
+  }) async {
+    String urlApiCheckEmail =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getEmailWhereEmail.php?isAdd=true&email=$email';
+
+    var resultCheckEmail = await Dio().get(urlApiCheckEmail);
+
+    if (resultCheckEmail.toString() == 'null') {
+      // email ไม่ซ้ำ
+
+      String customerId = 'cus-${Random().nextInt(1000)}';
+
+      String urlApiRegister = 'https://www.androidthai.in.th/fluttertraining/UngFew/insertUser.php?isAdd=true&customerId=$customerId&address=$address&customerName=$name&lastName=$surName&phoneNumber=$phoneNumber&lat=$lat&lng=$lng&email=$email&password=$password';
+
+      await Dio().get(urlApiRegister).then(
+        (value) {
+          Get.back();
+          Get.snackbar('Register Success', 'Welcome To My App Please Login');
+        },
+      );
+    } else {
+      Get.snackbar(
+        'Email ซ้ำ',
+        'มี $email นี่ในฐานข้อมูล แล้ว กรุณาเปลียน email ใหม่',
+        backgroundColor: GFColors.DANGER,
+        colorText: GFColors.WHITE,
+      );
+    }
+  }
 
   Future<void> processFindPosition() async {
     bool locationService = await Geolocator.isLocationServiceEnabled();

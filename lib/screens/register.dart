@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      WidgetForm(
+                      WidgetForm(controller: customerName,
                         labelText: 'Name :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -99,8 +99,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
-                      WidgetForm(
+                      const SizedBox(height: 16),
+                      WidgetForm(controller: lastName,
                         labelText: 'Surname :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -110,8 +110,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
-                      WidgetForm(
+                      const SizedBox(height: 16),
+                      WidgetForm(controller: phoneNumber,
                         labelText: 'Phone :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -121,8 +121,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
-                      WidgetForm(
+                      const SizedBox(height: 16),
+                      WidgetForm(controller: address,
                         labelText: 'Address :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -132,8 +132,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
-                      WidgetForm(
+                      const SizedBox(height: 16),
+                      WidgetForm(controller: email,
                         labelText: 'Email :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -143,8 +143,8 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
-                      WidgetForm(
+                      const SizedBox(height: 16),
+                      WidgetForm(controller: pass,
                         labelText: 'Password :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -169,8 +169,10 @@ class _RegisterState extends State<Register> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const Text('Location :'),
-                                      Text('ละติจูต : ${appController.positions.last.latitude}'),
-                                      Text('ลองติจูต : ${appController.positions.last.longitude}'),
+                                      Text(
+                                          'ละติจูต : ${appController.positions.last.latitude}'),
+                                      Text(
+                                          'ลองติจูต : ${appController.positions.last.longitude}'),
                                     ],
                                   ),
                                 );
@@ -189,7 +191,20 @@ class _RegisterState extends State<Register> {
         children: [
           WidgetButton(
               onPressed: () {
-                if (keyForm.currentState!.validate()) {}
+                if (keyForm.currentState!.validate()) {
+
+                  AppController appController = Get.put(AppController());
+
+                  AppService().processRegister(
+                      name: customerName.text,
+                      surName: lastName.text,
+                      phoneNumber: phoneNumber.text,
+                      address: address.text,
+                      email: email.text,
+                      password: pass.text,
+                      lat: appController.positions.last.latitude.toString(),
+                      lng: appController.positions.last.longitude.toString(),);
+                }
               },
               text: 'สมัครสมาชิก'),
         ],
