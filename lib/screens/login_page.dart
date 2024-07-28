@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:testdb/screens/register.dart';
 import 'package:testdb/screens/forget.dart';
-import 'package:testdb/screens/home.dart';
+import 'package:testdb/utility/app_service.dart';
 import 'package:testdb/widgets/widget_button.dart';
 import 'package:testdb/widgets/widget_form.dart';
 
@@ -17,6 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late Color mycolor;
   late Size mediaSize;
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool rememberUser = false;
@@ -184,7 +185,6 @@ class _LoginPageState extends State<LoginPage> {
           textStyle: const TextStyle(
               fontSize: 16, color: Colors.blue, fontWeight: FontWeight.w300),
         ),
-
         WidgetButton(
           text: 'ลืมรหัสผ่าน',
           onPressed: () {
@@ -194,8 +194,6 @@ class _LoginPageState extends State<LoginPage> {
           textStyle: const TextStyle(
               fontSize: 16, color: Colors.blue, fontWeight: FontWeight.w300),
         ),
-
-       
       ],
     );
   }
@@ -214,6 +212,9 @@ class _LoginPageState extends State<LoginPage> {
         //         builder: (context) => Home(),
         //       ));
         // });
+
+        AppService().processCheckLogin(
+            email: emailController.text, password: passwordController.text);
       },
       style: ElevatedButton.styleFrom(
         shape: const StadiumBorder(),
