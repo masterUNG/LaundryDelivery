@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 import 'package:testdb/models/user_model.dart';
 import 'package:testdb/screens/main_home.dart';
 import 'package:testdb/utility/app_controller.dart';
@@ -14,6 +15,20 @@ import 'package:testdb/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  void calculateTotalWash() {
+    appController.total.value = (appController.optionWashClothes.value ? 40  : 0)  ;
+   
+  }
+
+  String changeDateTimeToString(
+      {required DateTime dateTime, String? timeFormat}) {
+    DateFormat dateFormat = DateFormat(timeFormat ?? 'dd / MMM / yy');
+
+    String result = dateFormat.format(dateTime);
+
+    return result;
+  }
 
   Future<void> processCheckLogin({
     required String email,
