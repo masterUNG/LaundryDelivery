@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:testdb/models/order_wash_model.dart';
 import 'package:testdb/utility/app_constant.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_dialog.dart';
@@ -19,6 +22,10 @@ class _ChooseProductState extends State<ChooseProduct> {
   @override
   void initState() {
     super.initState();
+
+    if (appController.currentUserModels.isEmpty) {
+      AppService().findCurrentUserLogin();
+    }
   }
 
   @override
@@ -165,7 +172,7 @@ class _ChooseProductState extends State<ChooseProduct> {
         ],
       ),
       floatingActionButton: WidgetButton(
-          onPressed: () {
+          onPressed: () async {
             if ((appController.chooseStartWorkDateTimes.isEmpty) ||
                 (appController.chooseStartWorkHHmm.last == null)) {
               Get.snackbar('เวลารับผ้า', 'กรุณาเลือกเวลารับผ้า');
@@ -175,11 +182,36 @@ class _ChooseProductState extends State<ChooseProduct> {
             } else if (appController.chooseAmountCloths.last == null) {
               Get.snackbar('จำนวนเสื้อผ้า', 'กรุณาเลือกจำนวน เสื้อผ้าด้วย คะ');
             } else if (appController.chooseAmountDetergent.last == null) {
-               Get.snackbar('น้ำยาซักผ้า', 'กรุณาเลือกน้ำยาซักผ้าด้วย คะ');
+              Get.snackbar('น้ำยาซักผ้า', 'กรุณาเลือกน้ำยาซักผ้าด้วย คะ');
             } else if (appController.chooseAmountSofterner.last == null) {
-              Get.snackbar('น้ำยาปรับผ้านุ่ม', 'กรุณาเลือกน้ำยาปรับผ้านุ่มด้วย คะ');
+              Get.snackbar(
+                  'น้ำยาปรับผ้านุ่ม', 'กรุณาเลือกน้ำยาปรับผ้านุ่มด้วย คะ');
             } else {
+              OrderWashModel model = OrderWashModel(
+                  id: '',
+                  refWash: 'ref-${Random().nextInt(10000)}',
+                  customerId: appController.currentUserModels.last.customerId,
+                  dateStart: AppService().changeDateTimeToString(
+                      dateTime: appController.chooseStartWorkDateTimes.last),
+                  timeStar: AppService().changeDateTimeToString(
+                      dateTime: appController.chooseStartWorkHHmm.last!,
+                      timeFormat: 'HH:mm'),
+                  dateEnd: AppService().changeDateTimeToString(
+                      dateTime: appController.chooseEndWorkDateTimes.last),
+                  timeEnd: AppService().changeDateTimeToString(
+                      dateTime: appController.chooseEndWorkHHmm.last!,
+                      timeFormat: 'HH:mm'),
+                  dry: appController.optionDryClothes.value.toString(),
+                  amountCloth: appController.chooseAmountCloths.last.toString(),
+                  detergen: appController.chooseAmountDetergent.last.toString(),
+                  softener: appController.chooseAmountSofterner.last.toString(),
+                  total:
+                      '${(appController.optionWashClothes.value ? 40 : 0) + (appController.optionDryClothes.value ? 40 : 0) + (appController.chooseAmountCloths.last != null ? 5 * appController.chooseAmountCloths.last! : 0) + (appController.chooseAmountDetergent.last != null ? 10 * appController.chooseAmountDetergent.last! : 0) + (appController.chooseAmountSofterner.last != null ? 10 * appController.chooseAmountSofterner.last! : 0)}',
+                  status: 'Order');
 
+              print('## model ---> ${model.toMap()}');
+
+              await AppService().processInsertOrder(orderWashModel: model);
             }
           },
           text: 'Order'),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:testdb/models/order_wash_model.dart';
+import 'package:testdb/models/user_model.dart';
 
 class AppController extends GetxController {
   RxList positions = <Position>[].obs;
@@ -21,4 +23,10 @@ class AppController extends GetxController {
   RxList<int?> chooseAmountSofterner = <int?>[null].obs;
 
   RxInt total = 0.obs;
+
+  RxList<UserModel> currentUserModels = <UserModel>[].obs;
+
+  RxList<OrderWashModel> orderWashModels = <OrderWashModel>[].obs;
+
+
 }
