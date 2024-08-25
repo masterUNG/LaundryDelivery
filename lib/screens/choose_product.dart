@@ -49,13 +49,10 @@ class _ChooseProductState extends State<ChooseProduct> {
                     width: 100,
                   ),
                   const Text('เครื่องซีกผ้า 40 บาท'),
-                  Obx(() => Checkbox(
-                        value: appController.optionWashClothes.value,
-                        onChanged: (value) {
-                          appController.optionWashClothes.value =
-                              !appController.optionWashClothes.value;
-                        },
-                      ))
+                  Checkbox(
+                    value: true,
+                    onChanged: (value) {},
+                  )
                 ],
               ),
               Column(
@@ -167,6 +164,25 @@ class _ChooseProductState extends State<ChooseProduct> {
           )
         ],
       ),
+      floatingActionButton: WidgetButton(
+          onPressed: () {
+            if ((appController.chooseStartWorkDateTimes.isEmpty) ||
+                (appController.chooseStartWorkHHmm.last == null)) {
+              Get.snackbar('เวลารับผ้า', 'กรุณาเลือกเวลารับผ้า');
+            } else if ((appController.chooseEndWorkDateTimes.isEmpty) ||
+                (appController.chooseEndWorkHHmm.last == null)) {
+              Get.snackbar('เวลาส่งผ้า', 'กรุณาเลือกเวลาส่งผ้า');
+            } else if (appController.chooseAmountCloths.last == null) {
+              Get.snackbar('จำนวนเสื้อผ้า', 'กรุณาเลือกจำนวน เสื้อผ้าด้วย คะ');
+            } else if (appController.chooseAmountDetergent.last == null) {
+               Get.snackbar('น้ำยาซักผ้า', 'กรุณาเลือกน้ำยาซักผ้าด้วย คะ');
+            } else if (appController.chooseAmountSofterner.last == null) {
+              Get.snackbar('น้ำยาปรับผ้านุ่ม', 'กรุณาเลือกน้ำยาปรับผ้านุ่มด้วย คะ');
+            } else {
+
+            }
+          },
+          text: 'Order'),
     );
   }
 
