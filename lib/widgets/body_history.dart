@@ -45,7 +45,19 @@ class _BodyHistoryState extends State<BodyHistory> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(appController.orderWashModels[index].refWash),
+
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(appController.orderWashModels[index].refWash),
+
+                      Text('Status : ${appController.orderWashModels[index].status}'),
+
+                    ],
+                  ),
+
+
+
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
