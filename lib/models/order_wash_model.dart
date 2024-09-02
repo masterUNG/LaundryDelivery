@@ -15,6 +15,8 @@ class OrderWashModel {
   final String softener;
   final String total;
   final String status;
+  final String idAdminReceive;
+  final String idAdminOrder;
   OrderWashModel({
     required this.id,
     required this.refWash,
@@ -29,6 +31,8 @@ class OrderWashModel {
     required this.softener,
     required this.total,
     required this.status,
+    required this.idAdminReceive,
+    required this.idAdminOrder,
   });
 
   Map<String, dynamic> toMap() {
@@ -46,6 +50,8 @@ class OrderWashModel {
       'softener': softener,
       'total': total,
       'status': status,
+      'idAdminReceive': idAdminReceive,
+      'idAdminOrder': idAdminOrder,
     };
   }
 
@@ -64,6 +70,8 @@ class OrderWashModel {
       softener: (map['softener'] ?? '') as String,
       total: (map['total'] ?? '') as String,
       status: (map['status'] ?? '') as String,
+      idAdminReceive: (map['idAdminReceive'] ?? '') as String,
+      idAdminOrder: (map['idAdminOrder'] ?? '') as String,
     );
   }
 
