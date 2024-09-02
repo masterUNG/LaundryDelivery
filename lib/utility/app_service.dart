@@ -58,8 +58,15 @@ class AppService {
     var result = await GetStorage().read('data');
 
     if (result != null) {
-      UserModel model = UserModel.fromMap(result);
-      appController.currentUserModels.add(model);
+      String urlAPI =
+          'https://www.androidthai.in.th/fluttertraining/UngFew/getEmailWhereEmail.php?isAdd=true&email=${result["email"]}';
+
+      var response = await Dio().get(urlAPI);
+
+      for (var element in json.decode(response.data)) {
+        UserModel model = UserModel.fromMap(element);
+        appController.currentUserModels.add(model);
+      }
     }
   }
 
