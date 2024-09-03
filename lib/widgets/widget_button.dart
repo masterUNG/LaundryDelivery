@@ -9,12 +9,14 @@ class WidgetButton extends StatelessWidget {
     required this.text,
     this.type,
     this.textStyle,
+    this.color,
   }) : super(key: key);
 
   final Function() onPressed;
   final String text;
   final GFButtonType? type;
   final TextStyle? textStyle;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class WidgetButton extends StatelessWidget {
       onPressed: onPressed,
       text: text,
       type: type ?? GFButtonType.solid,
-      textStyle: textStyle,
+      textStyle: textStyle,color: color ?? GFColors.PRIMARY,
     );
   }
 }

@@ -90,39 +90,58 @@ class _BodyHistoryState extends State<BodyHistory> {
                                   'Receive'
                               ? Image.network(
                                   'https://promptpay.io/0818595309/${appController.orderWashModels[index].total}')
-                              : Image.network(appController.orderWashModels[index].urlSlip),
+                              : Image.network(
+                                  appController.orderWashModels[index].urlSlip),
                     ],
                   ),
                   firstAction: appController.orderWashModels[index].status ==
                           'Order'
-                      ? null
-                      : appController.orderWashModels[index].status == 'Receive' ? WidgetButton(
+                      ? WidgetButton(
                           onPressed: () async {
-                            String url =
-                                'https://promptpay.io/0818595309/${appController.orderWashModels[index].total}';
+                            String urlApi =
+                                'https://www.androidthai.in.th/fluttertraining/UngFew/deleteWhereId.php?isAdd=true&id=${appController.orderWashModels[index].id}';
 
-                            var response = await Dio().get(url,
-                                options:
-                                    Options(responseType: ResponseType.bytes));
-
-                            final result = await ImageGallerySaver.saveImage(
-                                Uint8List.fromList(response.data),
-                                quality: 60,
-                                name: 'promptpay');
-
-                            if (result['isSuccess']) {
-                              Get.back();
-                              Get.snackbar('โหลด QRcode สำเร็จ',
-                                  'เปิดแอพ ธนาคาร และ Scan QR code ผ่านไฟร์ และ กลับมา อัพโหลดสลิป');
-                            }
+                            await Dio().get(urlApi).then(
+                              (value) {
+                                Get.back();
+                                AppService().readAllOrder();
+                              },
+                            );
                           },
-                          text: 'โหลด QRcode เก็บในเครื่อง',
-                          type: GFButtonType.outline2x,
-                        ) : null,
-                  thirdAction:
-                      appController.orderWashModels[index].status == 'Order'
-                          ? null
-                          : appController.orderWashModels[index].status == 'Receive' ? WidgetButton(
+                          text: 'ยกเลิก Order',
+                          color: GFColors.DANGER,
+                        )
+                      : appController.orderWashModels[index].status == 'Receive'
+                          ? WidgetButton(
+                              onPressed: () async {
+                                String url =
+                                    'https://promptpay.io/0818595309/${appController.orderWashModels[index].total}';
+
+                                var response = await Dio().get(url,
+                                    options: Options(
+                                        responseType: ResponseType.bytes));
+
+                                final result =
+                                    await ImageGallerySaver.saveImage(
+                                        Uint8List.fromList(response.data),
+                                        quality: 60,
+                                        name: 'promptpay');
+
+                                if (result['isSuccess']) {
+                                  Get.back();
+                                  Get.snackbar('โหลด QRcode สำเร็จ',
+                                      'เปิดแอพ ธนาคาร และ Scan QR code ผ่านไฟร์ และ กลับมา อัพโหลดสลิป');
+                                }
+                              },
+                              text: 'โหลด QRcode เก็บในเครื่อง',
+                              type: GFButtonType.outline2x,
+                            )
+                          : null,
+                  thirdAction: appController.orderWashModels[index].status ==
+                          'Order'
+                      ? null
+                      : appController.orderWashModels[index].status == 'Receive'
+                          ? WidgetButton(
                               onPressed: () async {
                                 await AppTakePhoto().uploadImage().then(
                                   (value) async {
@@ -143,7 +162,8 @@ class _BodyHistoryState extends State<BodyHistory> {
                               },
                               text: 'อัพโหลด สลิป',
                               type: GFButtonType.outline2x,
-                            ) : null,
+                            )
+                          : null,
                 );
               },
               child: Container(
@@ -170,7 +190,11 @@ class _BodyHistoryState extends State<BodyHistory> {
                                                   .status ==
                                               'Receive'
                                           ? Colors.orange
-                                          : Colors.pink.shade200),
+                                          : appController.orderWashModels[index]
+                                                      .status ==
+                                                  'Payment'
+                                              ? Colors.pink.shade200
+                                              : Colors.blue),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
                               'Status : ${appController.orderWashModels[index].status}'),
