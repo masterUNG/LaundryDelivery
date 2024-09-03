@@ -37,7 +37,8 @@ class _AdminPageState extends State<AdminPage> {
       ),
       body: Obx(() => appController.orderWashModels.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(reverse: true,
+          : ListView.builder(
+              reverse: true,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: appController.orderWashModels.length,
               itemBuilder: (context, index) => InkWell(
@@ -72,7 +73,15 @@ class _AdminPageState extends State<AdminPage> {
                                             .orderWashModels[index].status ==
                                         'Order'
                                     ? Colors.green
-                                    : Colors.orange),
+                                    : appController.orderWashModels[index]
+                                                .status ==
+                                            'Receive'
+                                        ? Colors.orange
+                                        : appController.orderWashModels[index]
+                                                    .status ==
+                                                'Payment'
+                                            ? Colors.pink.shade200
+                                            : Colors.blue),
                             child: Text(
                                 appController.orderWashModels[index].status),
                           ),

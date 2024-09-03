@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
@@ -77,6 +78,10 @@ class _DetailOrderState extends State<DetailOrder> {
               }
             },
           ),
+          const Divider(),
+          ((widget.orderWashModel.status == 'Payment') || (widget.orderWashModel.status == 'Finish'))
+              ? Image.network(widget.orderWashModel.urlSlip)
+              : const SizedBox(),
         ],
       ),
     );
@@ -96,51 +101,103 @@ class _DetailOrderState extends State<DetailOrder> {
             Text('น้ำยาปรับผ้านุ่ม : ${widget.orderWashModel.softener}'),
           ],
         ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 200,
-              child: Obx(() => CheckboxListTile(
-                    value: appController.receive.value,
-                    onChanged: (value) {
-                      appController.receive.value =
-                          !appController.receive.value;
-                    },
-                    title: const Text('รับสินค้า'),
-                    controlAffinity: ListTileControlAffinity.leading,
-                  )),
-            ),
-            Obx(() => appController.receive.value
-                ? Text(
-                    'คนรับ : ${widget.adminUserModel.customerName}',
-                    style: const TextStyle(color: GFColors.DANGER),
-                  )
-                : const SizedBox()),
-            WidgetButton(
-                onPressed: () async {
-                  if (appController.receive.value) {
-                    //receive
+        ((widget.orderWashModel.status == 'Payment') ||
+                (widget.orderWashModel.status == 'Finish'))
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: const Text('ชำระค่าบริการแล้ว'),
+                    decoration: BoxDecoration(border: Border.all()),
+                  ),
+                  widget.orderWashModel.status == 'Payment'
+                      ? WidgetButton(
+                          onPressed: () async {
+                            String urlApi =
+                                'https://www.androidthai.in.th/fluttertraining/UngFew/editFinishWhereId.php?isAdd=true&id=${widget.orderWashModel.id}&idAdminFinish=${widget.adminUserModel.id}';
 
-                    AppService().processEditStatusByIdOrder(
-                        id: widget.orderWashModel.id,
-                        status: 'Receive',
-                        idAdminReceive: widget.adminUserModel.id,
-                        idAdminOrder: widget.orderWashModel.idAdminOrder);
-                  } else {
-                    //order
+                            await Dio().get(urlApi).then((value) {
+                              Get.back();
+                            });
+                          },
+                          text: 'ส่งเสื้อผ้า',
+                          type: GFButtonType.outline2x,
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Admin ทีี่ส่งผ้่า :'),
+                            FutureBuilder(
+                              future: AppService().findUserModelId(
+                                  id: widget.orderWashModel.idAdminFinish),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  UserModel? model = snapshot.data;
 
-                    AppService().processEditStatusByIdOrder(
-                        id: widget.orderWashModel.id,
-                        status: 'Order',
-                        idAdminReceive: widget.orderWashModel.idAdminReceive,
-                        idAdminOrder: widget.adminUserModel.id);
-                  }
-                },
-                text: 'บันทึก')
-          ],
-        ),
+                                  if (model == null) {
+                                    return const SizedBox();
+                                  } else {
+                                    return Text(
+                                      model.customerName, style: const TextStyle(color: GFColors.DANGER, fontSize: 16, fontWeight: FontWeight.w700),
+                                    );
+                                  }
+                                } else {
+                                  return const SizedBox();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                ],
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: Obx(() => CheckboxListTile(
+                          value: appController.receive.value,
+                          onChanged: (value) {
+                            appController.receive.value =
+                                !appController.receive.value;
+                          },
+                          title: const Text('รับสินค้า'),
+                          controlAffinity: ListTileControlAffinity.leading,
+                        )),
+                  ),
+                  Obx(() => appController.receive.value
+                      ? Text(
+                          'คนรับ : ${widget.adminUserModel.customerName}',
+                          style: const TextStyle(color: GFColors.DANGER),
+                        )
+                      : const SizedBox()),
+                  WidgetButton(
+                      onPressed: () async {
+                        if (appController.receive.value) {
+                          //receive
+
+                          AppService().processEditStatusByIdOrder(
+                              id: widget.orderWashModel.id,
+                              status: 'Receive',
+                              idAdminReceive: widget.adminUserModel.id,
+                              idAdminOrder: widget.orderWashModel.idAdminOrder);
+                        } else {
+                          //order
+
+                          AppService().processEditStatusByIdOrder(
+                              id: widget.orderWashModel.id,
+                              status: 'Order',
+                              idAdminReceive:
+                                  widget.orderWashModel.idAdminReceive,
+                              idAdminOrder: widget.adminUserModel.id);
+                        }
+                      },
+                      text: 'บันทึก')
+                ],
+              ),
       ],
     );
   }

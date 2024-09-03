@@ -210,7 +210,8 @@ class _ChooseProductState extends State<ChooseProduct> {
                   status: 'Order',
                   idAdminReceive: '',
                   idAdminOrder: '',
-                  urlSlip: '');
+                  urlSlip: '',
+                  idAdminFinish: '');
 
               print('## model ---> ${model.toMap()}');
 

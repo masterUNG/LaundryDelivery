@@ -50,6 +50,22 @@ class AppService {
 
     return userModel;
   }
+  
+  Future<UserModel?> findUserModelId(
+      {required String id}) async {
+    UserModel? userModel;
+
+    String urlAPI =  'https://www.androidthai.in.th/fluttertraining/UngFew/getUserWhereId.php?isAdd=true&id=$id';
+        
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      userModel = UserModel.fromMap(element);
+    }
+
+    return userModel;
+  }
 
   Future<void> readAllOrder() async {
     String urlApi =
