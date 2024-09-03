@@ -37,7 +37,7 @@ class _AdminPageState extends State<AdminPage> {
       ),
       body: Obx(() => appController.orderWashModels.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
+          : ListView.builder(reverse: true,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: appController.orderWashModels.length,
               itemBuilder: (context, index) => InkWell(
