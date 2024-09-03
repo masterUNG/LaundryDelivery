@@ -207,7 +207,10 @@ class _ChooseProductState extends State<ChooseProduct> {
                   softener: appController.chooseAmountSofterner.last.toString(),
                   total:
                       '${(appController.optionWashClothes.value ? 40 : 0) + (appController.optionDryClothes.value ? 40 : 0) + (appController.chooseAmountCloths.last != null ? 5 * appController.chooseAmountCloths.last! : 0) + (appController.chooseAmountDetergent.last != null ? 10 * appController.chooseAmountDetergent.last! : 0) + (appController.chooseAmountSofterner.last != null ? 10 * appController.chooseAmountSofterner.last! : 0)}',
-                  status: 'Order', idAdminReceive: '', idAdminOrder: '');
+                  status: 'Order',
+                  idAdminReceive: '',
+                  idAdminOrder: '',
+                  urlSlip: '');
 
               print('## model ---> ${model.toMap()}');
 
