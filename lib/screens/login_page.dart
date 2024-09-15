@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:testdb/screens/main_home_owner_shop.dart';
 import 'package:testdb/screens/register.dart';
 import 'package:testdb/screens/forget.dart';
+import 'package:testdb/utility/app_constant.dart';
+import 'package:testdb/utility/app_dialog.dart';
 import 'package:testdb/utility/app_service.dart';
 import 'package:testdb/widgets/widget_button.dart';
 import 'package:testdb/widgets/widget_form.dart';
@@ -147,8 +150,66 @@ class _LoginPageState extends State<LoginPage> {
 
           _buildLoginButton(),
 
-          const SizedBox(height: 20),
-          _buildOtherLogin(),
+          const SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              WidgetButton(
+                onPressed: () {
+                  TextEditingController emailController =
+                      TextEditingController();
+                  TextEditingController passwordController =
+                      TextEditingController();
+
+                  AppDialog().normalDialog(
+                      title: 'ลงชื่อใช้งาน',
+                      contentWidget: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('สำหรับเจ้าของกิจการเท่านั้น'),
+                          const SizedBox(height: 16),
+                          WidgetForm(
+                            controller: emailController,
+                            hintText: 'Email :',
+                          ),
+                          const SizedBox(height: 16),
+                          WidgetForm(
+                            controller: passwordController,
+                            hintText: 'Password :',
+                            obscureText: true,
+                          ),
+                        ],
+                      ),
+                      firstAction: WidgetButton(
+                          onPressed: () {
+                            Get.back();
+
+                            if ((emailController.text.isEmpty) ||
+                                (passwordController.text.isEmpty)) {
+                              Get.snackbar('กรอกไม่ครบ', 'กรุณากรอกให้ครบ',
+                                  backgroundColor: GFColors.DANGER,
+                                  colorText: GFColors.WHITE);
+                            } else if ((emailController.text !=
+                                    AppConstant.ownerShopLogin['email']) ||
+                                (passwordController.text !=
+                                    AppConstant.ownerShopLogin['password'])) {
+                              Get.snackbar(
+                                  'Login False', 'Email หรือ Password ผิด',
+                                  backgroundColor: GFColors.DANGER,
+                                  colorText: GFColors.WHITE);
+                            } else {
+                              Get.offAll(const MainHomeOwnerShop());
+                            }
+                          },
+                          text: 'Login'));
+                },
+                text: 'สำหรับเจ้าของร้าน',
+                type: GFButtonType.transparent,
+              ),
+            ],
+          ),
+          // const SizedBox(height: 16),
+          // _buildOtherLogin(),
         ],
       ),
     );

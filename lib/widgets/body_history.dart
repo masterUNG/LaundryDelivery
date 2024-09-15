@@ -151,12 +151,14 @@ class _BodyHistoryState extends State<BodyHistory> {
                                     String urlEditUrlSlip =
                                         'https://www.androidthai.in.th/fluttertraining/UngFew/editUrlSlipWhereId.php?isAdd=true&id=${appController.orderWashModels[index].id}&status=Payment&urlSlip=$urlSlip';
 
-                                    await Dio().get(urlEditUrlSlip).then(
-                                      (value) {
-                                        Get.back();
-                                        AppService().readAllOrder();
-                                      },
-                                    );
+                                    if (urlSlip.isNotEmpty) {
+                                      await Dio().get(urlEditUrlSlip).then(
+                                        (value) {
+                                          Get.back();
+                                          AppService().readAllOrder();
+                                        },
+                                      );
+                                    }
                                   },
                                 );
                               },

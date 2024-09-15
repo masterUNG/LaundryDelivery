@@ -1,4 +1,9 @@
 class AppConstant {
+  static Map<String, dynamic> ownerShopLogin = {
+    'email': 'admin@abc.com',
+    'password': '123456',
+  };
+
   static var amountCloths = <int>[
     1,
     2,
