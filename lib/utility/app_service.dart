@@ -19,6 +19,25 @@ import 'package:testdb/widgets/widget_button.dart';
 class AppService {
   AppController appController = Get.put(AppController());
 
+  Future<List<OrderWashModel>> processReadOrderWhereStatus(
+      {required String status}) async {
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getOrderWhereStatus.php?isAdd=true&status=$status';
+
+    var orderWashModels = <OrderWashModel>[];
+
+    var result = await Dio().get(urlAPI);
+
+    if (result.toString() != 'null') {
+      for (var element in json.decode(result.data)) {
+        OrderWashModel model = OrderWashModel.fromMap(element);
+        orderWashModels.add(model);
+      }
+    }
+
+    return orderWashModels;
+  }
+
   Future<void> processEditStatusByIdOrder({
     required String id,
     required String status,
