@@ -50,13 +50,12 @@ class AppService {
 
     return userModel;
   }
-  
-  Future<UserModel?> findUserModelId(
-      {required String id}) async {
+
+  Future<UserModel?> findUserModelId({required String id}) async {
     UserModel? userModel;
 
-    String urlAPI =  'https://www.androidthai.in.th/fluttertraining/UngFew/getUserWhereId.php?isAdd=true&id=$id';
-        
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getUserWhereId.php?isAdd=true&id=$id';
 
     var result = await Dio().get(urlAPI);
 
@@ -164,9 +163,7 @@ class AppService {
             if (model.password == password) {
               // password true
 
-              if ((model.email == 'admin1@abc.com') ||
-                  (model.email == 'admin2@abc.com') ||
-                  (model.email == 'admin3@abc.com')) {
+              if (model.status == 'officer') {
                 //Admin Login
 
                 Get.offAll(AdminPage(userModel: model));
@@ -196,6 +193,7 @@ class AppService {
     required String password,
     required String lat,
     required String lng,
+    String? status,
   }) async {
     String urlApiCheckEmail =
         'https://www.androidthai.in.th/fluttertraining/UngFew/getEmailWhereEmail.php?isAdd=true&email=$email';
@@ -207,8 +205,10 @@ class AppService {
 
       String customerId = 'cus-${Random().nextInt(1000)}';
 
+      String myStatus = status ?? 'user';
+
       String urlApiRegister =
-          'https://www.androidthai.in.th/fluttertraining/UngFew/insertUser.php?isAdd=true&customerId=$customerId&address=$address&customerName=$name&lastName=$surName&phoneNumber=$phoneNumber&lat=$lat&lng=$lng&email=$email&password=$password';
+          'https://www.androidthai.in.th/fluttertraining/UngFew/insertUser.php?isAdd=true&customerId=$customerId&address=$address&customerName=$name&lastName=$surName&phoneNumber=$phoneNumber&lat=$lat&lng=$lng&email=$email&password=$password&status=$myStatus';
 
       await Dio().get(urlApiRegister).then(
         (value) {
@@ -283,5 +283,24 @@ class AppService {
               );
             },
             text: 'โปรดอนุญาติแชร์พิกัด'));
+  }
+
+  Future<List<UserModel>> processReadUserWhereStatus(
+      {required String status}) async {
+    String urlApi =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getUserWhereStatus.php?isAdd=true&status=$status';
+
+    var userModels = <UserModel>[];
+
+    var result = await Dio().get(urlApi);
+
+    if (result.toString() != 'null') {
+      for (var element in json.decode(result.data)) {
+        UserModel model = UserModel.fromMap(element);
+        userModels.add(model);
+      }
+    }
+
+    return userModels;
   }
 }

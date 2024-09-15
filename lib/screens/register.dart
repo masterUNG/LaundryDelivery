@@ -1,15 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_service.dart';
 import 'package:testdb/widgets/widget_button.dart';
 import 'package:testdb/widgets/widget_form.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  const Register({
+    Key? key,
+    this.status,
+  }) : super(key: key);
+
+  final String? status;
 
   @override
   State<Register> createState() => _RegisterState();
@@ -89,7 +96,8 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      WidgetForm(controller: customerName,
+                      WidgetForm(
+                        controller: customerName,
                         labelText: 'Name :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -100,7 +108,8 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      WidgetForm(controller: lastName,
+                      WidgetForm(
+                        controller: lastName,
                         labelText: 'Surname :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -111,7 +120,8 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      WidgetForm(controller: phoneNumber,
+                      WidgetForm(
+                        controller: phoneNumber,
                         labelText: 'Phone :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -122,7 +132,8 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      WidgetForm(controller: address,
+                      WidgetForm(
+                        controller: address,
                         labelText: 'Address :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -133,7 +144,8 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      WidgetForm(controller: email,
+                      WidgetForm(
+                        controller: email,
                         labelText: 'Email :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -144,7 +156,8 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      WidgetForm(controller: pass,
+                      WidgetForm(
+                        controller: pass,
                         labelText: 'Password :',
                         validator: (p0) {
                           if (p0?.isEmpty ?? true) {
@@ -154,7 +167,7 @@ class _RegisterState extends State<Register> {
                           }
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       GetX<AppController>(
                         init: AppController(),
                         initState: (_) {},
@@ -192,18 +205,19 @@ class _RegisterState extends State<Register> {
           WidgetButton(
               onPressed: () {
                 if (keyForm.currentState!.validate()) {
-
                   AppController appController = Get.put(AppController());
 
                   AppService().processRegister(
-                      name: customerName.text,
-                      surName: lastName.text,
-                      phoneNumber: phoneNumber.text,
-                      address: address.text,
-                      email: email.text,
-                      password: pass.text,
-                      lat: appController.positions.last.latitude.toString(),
-                      lng: appController.positions.last.longitude.toString(),);
+                    name: customerName.text,
+                    surName: lastName.text,
+                    phoneNumber: phoneNumber.text,
+                    address: address.text,
+                    email: email.text,
+                    password: pass.text,
+                    lat: appController.positions.last.latitude.toString(),
+                    lng: appController.positions.last.longitude.toString(),
+                    status: widget.status,
+                  );
                 }
               },
               text: 'สมัครสมาชิก'),

@@ -6,6 +6,7 @@ import 'package:testdb/models/user_model.dart';
 import 'package:testdb/screens/detail_order.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_service.dart';
+import 'package:testdb/widgets/widget_signout.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({
@@ -33,7 +34,7 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('เช็คเสื้อผ้าลูกค้า โดย ${widget.userModel.customerName}'),
+        title: Text('Offier : ${widget.userModel.customerName}'),actions: const[WidgetSignOut()],
       ),
       body: Obx(() => appController.orderWashModels.isEmpty
           ? const Center(child: CircularProgressIndicator())

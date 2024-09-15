@@ -27,10 +27,11 @@ if (isset($_GET)) {
 		$lng = $_GET['lng'];
 		$email = $_GET['email'];
 		$password = $_GET['password'];
+		$status = $_GET['status'];
 		
 		
 							
-		$sql = "INSERT INTO `ung_few_user`(`id`, `customerId`, `address`, `customerName`, `lastName`, `phoneNumber`, `lat`, `lng`, `status`, `email`, `password`) VALUES (Null,'$customerId','$address','$customerName','$lastName','$phoneNumber','$lat','$lng','user','$email','$password')";
+		$sql = "INSERT INTO `ung_few_user`(`id`, `customerId`, `address`, `customerName`, `lastName`, `phoneNumber`, `lat`, `lng`, `status`, `email`, `password`) VALUES (Null,'$customerId','$address','$customerName','$lastName','$phoneNumber','$lat','$lng','$status','$email','$password')";
 
 		$result = mysqli_query($link, $sql);
 
