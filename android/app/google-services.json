@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "590989361304",
+    "project_id": "fewproj-c945f",
+    "storage_bucket": "fewproj-c945f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590989361304:android:af0e3bc08a6a6b6e5890ed",
+        "android_client_info": {
+          "package_name": "com.msu.few"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIMNiibXqVxJtS7De22gCsGheQZaQpEFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
