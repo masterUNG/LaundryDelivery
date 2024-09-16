@@ -1,21 +1,30 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:testdb/models/message_model.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_service.dart';
 import 'package:testdb/widgets/widget_form.dart';
 import 'package:testdb/widgets/widget_icon_button.dart';
 
-class ChatWithAdmin extends StatefulWidget {
-  const ChatWithAdmin({super.key});
+class ChatWithCustomer extends StatefulWidget {
+  const ChatWithCustomer({
+    Key? key,
+    required this.customerId,
+    required this.customerIdAdmin,
+  }) : super(key: key);
+
+  final String customerId;
+  final String customerIdAdmin;
 
   @override
-  State<ChatWithAdmin> createState() => _ChatWithAdminState();
+  State<ChatWithCustomer> createState() => _ChatWithCustomerState();
 }
 
-class _ChatWithAdminState extends State<ChatWithAdmin> {
+class _ChatWithCustomerState extends State<ChatWithCustomer> {
   AppController appController = Get.put(AppController());
 
   TextEditingController textEditingController = TextEditingController();
@@ -24,10 +33,10 @@ class _ChatWithAdminState extends State<ChatWithAdmin> {
   void initState() {
     super.initState();
 
-    AppService().processCheckHaveCustomer();
+    // AppService().processCheckHaveCustomer();
 
-    AppService().readAllMessageWhereCustomerIdUser(
-        customerIdUser: appController.currentUserModels.last.customerId);
+    AppService()
+        .readAllMessageWhereCustomerIdUser(customerIdUser: widget.customerId);
   }
 
   @override
@@ -48,7 +57,7 @@ class _ChatWithAdminState extends State<ChatWithAdmin> {
                     itemBuilder: (context, index) => BubbleSpecialThree(
                       text: appController.messageModels[index].message,
                       color: Colors.amber,
-                      isSender: appController.currentUserModels.last.customerId == appController.messageModels[index].customerId,
+                      isSender: widget.customerIdAdmin == appController.messageModels[index].customerId,
                     ),
                   )),
             messageForm(),
@@ -70,16 +79,20 @@ class _ChatWithAdminState extends State<ChatWithAdmin> {
             iconData: Icons.send,
             onPressed: () {
               if (textEditingController.text.isNotEmpty) {
-                String customerId =
-                    appController.currentUserModels.last.customerId;
+                String customerId = widget.customerId;
+
                 print('## customerId ---> $customerId');
 
                 MessageModel model = MessageModel(
-                    customerId: customerId,
+                    customerId: widget.customerIdAdmin,
                     message: textEditingController.text,
                     timestamp: Timestamp.fromDate(DateTime.now()));
 
-                AppService().processSendMessage(messageModel: model).then(
+                AppService()
+                    .processSendMessage(
+                        messageModel: model,
+                        customerId: customerId)
+                    .then(
                   (value) {
                     FocusManager.instance.primaryFocus?.unfocus();
                     textEditingController.clear();

@@ -10,6 +10,7 @@ class WidgetForm extends StatelessWidget {
     this.onChanged,
     this.hintText,
     this.obscureText,
+    this.suffixIcon,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -18,14 +19,16 @@ class WidgetForm extends StatelessWidget {
   final Function(String)? onChanged;
   final String? hintText;
   final bool? obscureText;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(obscureText: obscureText ?? false,
+    return TextFormField(
+      obscureText: obscureText ?? false,
       onChanged: onChanged,
       validator: validator,
       controller: controller,
-      decoration: InputDecoration(
+      decoration: InputDecoration(suffixIcon: suffixIcon,
         filled: true,
         border: InputBorder.none,
         labelText: labelText,

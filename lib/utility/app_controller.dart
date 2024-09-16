@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:testdb/models/message_model.dart';
 import 'package:testdb/models/order_wash_model.dart';
 import 'package:testdb/models/user_model.dart';
 
@@ -29,4 +30,8 @@ class AppController extends GetxController {
   RxList<OrderWashModel> orderWashModels = <OrderWashModel>[].obs;
 
   RxBool receive = false.obs;
+
+  RxList<MessageModel> messageModels = <MessageModel>[].obs;
+
+  RxList<UserModel> customerChatUserModels = <UserModel>[].obs;
 }

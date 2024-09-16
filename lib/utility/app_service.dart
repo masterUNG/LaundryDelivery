@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
+import 'package:testdb/models/message_model.dart';
 import 'package:testdb/models/order_wash_model.dart';
 import 'package:testdb/models/user_model.dart';
 import 'package:testdb/screens/admin_page.dart';
@@ -18,6 +20,67 @@ import 'package:testdb/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  Future<void> processReadAllMessageCustomer() async {
+    if (appController.customerChatUserModels.isNotEmpty) {
+      appController.customerChatUserModels.clear();
+    }
+
+    var result = await FirebaseFirestore.instance.collection('customer').get();
+
+    if (result.docs.isNotEmpty) {
+      for (var element in result.docs) {
+        UserModel model = UserModel.fromMap(element.data());
+        appController.customerChatUserModels.add(model);
+      }
+    }
+  }
+
+  Future<void> readAllMessageWhereCustomerIdUser(
+      {required String customerIdUser}) async {
+    await FirebaseFirestore.instance
+        .collection('customer')
+        .doc(customerIdUser)
+        .collection('message')
+        .orderBy('timestamp')
+        .snapshots()
+        .listen((event) {
+      if (appController.messageModels.isNotEmpty) {
+        appController.messageModels.clear();
+      }
+
+      if (event.docs.isNotEmpty) {
+        for (var element in event.docs) {
+          MessageModel model = MessageModel.fromMap(element.data());
+          appController.messageModels.add(model);
+        }
+      }
+    });
+  }
+
+  Future<void> processCheckHaveCustomer() async {
+    var result = await FirebaseFirestore.instance
+        .collection('customer')
+        .doc(appController.currentUserModels.last.customerId)
+        .get();
+
+    if (result.data() == null) {
+      await FirebaseFirestore.instance
+          .collection('customer')
+          .doc(appController.currentUserModels.last.customerId)
+          .set(appController.currentUserModels.last.toMap());
+    }
+  }
+
+  Future<void> processSendMessage(
+      {required MessageModel messageModel, String? customerId}) async {
+    await FirebaseFirestore.instance
+        .collection('customer')
+        .doc(customerId ?? messageModel.customerId)
+        .collection('message')
+        .doc()
+        .set(messageModel.toMap());
+  }
 
   int calculateTotal({required List<OrderWashModel> orderWashModels}) {
     int total = 0;
