@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:testdb/screens/chat_with_admin.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_dialog.dart';
 import 'package:testdb/utility/app_service.dart';
@@ -84,7 +85,16 @@ class _MainHomeState extends State<MainHome> {
                           },
                           text: 'SignOut'),
                     )
-                  : const SizedBox(),
+                  : appController.indexBody.value == 0
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 16),
+                          child: WidgetButton(
+                              onPressed: () {
+                                Get.to(const ChatWithAdmin());
+                              },
+                              text: 'Chat With Admin'),
+                        )
+                      : const SizedBox(),
             ],
           ),
           body: bodys[appController.indexBody.value],

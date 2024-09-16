@@ -36,8 +36,13 @@ class _AdminPageState extends State<AdminPage> {
       appBar: AppBar(
         title: Text('Offier : ${widget.userModel.customerName}'),actions: const[WidgetSignOut()],
       ),
+
+
       body: Obx(() => appController.orderWashModels.isEmpty
           ? const Center(child: CircularProgressIndicator())
+
+
+
           : ListView.builder(
               reverse: true,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -99,7 +104,14 @@ class _AdminPageState extends State<AdminPage> {
                   ),
                 ),
               ),
-            )),
+            ),
+            
+            
+            
+            ),
+
+
+
     );
   }
 }

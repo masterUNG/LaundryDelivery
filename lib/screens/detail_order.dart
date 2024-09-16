@@ -15,11 +15,11 @@ class DetailOrder extends StatefulWidget {
   const DetailOrder({
     Key? key,
     required this.orderWashModel,
-    required this.adminUserModel,
+    this.adminUserModel,
   }) : super(key: key);
 
   final OrderWashModel orderWashModel;
-  final UserModel adminUserModel;
+  final UserModel? adminUserModel;
 
   @override
   State<DetailOrder> createState() => _DetailOrderState();
@@ -61,9 +61,9 @@ class _DetailOrderState extends State<DetailOrder> {
 
                 Set<Marker> customerMaker = <Marker>[
                   Marker(
-                    markerId: MarkerId(model.id),
-                    position: LatLng(double.parse(model.lat), double.parse(model.lng))
-                  )
+                      markerId: MarkerId(model.id),
+                      position: LatLng(
+                          double.parse(model.lat), double.parse(model.lng)))
                 ].toSet();
 
                 return Column(
@@ -125,8 +125,9 @@ class _DetailOrderState extends State<DetailOrder> {
             Text('น้ำยาปรับผ้านุ่ม : ${widget.orderWashModel.softener}'),
           ],
         ),
-        ((widget.orderWashModel.status == 'Payment') ||
-                (widget.orderWashModel.status == 'Finish'))
+        ((widget.adminUserModel != null) &&
+                ((widget.orderWashModel.status == 'Payment') ||
+                    (widget.orderWashModel.status == 'Finish')))
             ? Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -139,7 +140,7 @@ class _DetailOrderState extends State<DetailOrder> {
                       ? WidgetButton(
                           onPressed: () async {
                             String urlApi =
-                                'https://www.androidthai.in.th/fluttertraining/UngFew/editFinishWhereId.php?isAdd=true&id=${widget.orderWashModel.id}&idAdminFinish=${widget.adminUserModel.id}';
+                                'https://www.androidthai.in.th/fluttertraining/UngFew/editFinishWhereId.php?isAdd=true&id=${widget.orderWashModel.id}&idAdminFinish=${widget.adminUserModel!.id}';
 
                             await Dio().get(urlApi).then((value) {
                               Get.back();
@@ -180,7 +181,7 @@ class _DetailOrderState extends State<DetailOrder> {
                         ),
                 ],
               )
-            : Column(
+            :  (widget.adminUserModel != null) ?   Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -198,7 +199,7 @@ class _DetailOrderState extends State<DetailOrder> {
                   ),
                   Obx(() => appController.receive.value
                       ? Text(
-                          'คนรับ : ${widget.adminUserModel.customerName}',
+                          'คนรับ : ${widget.adminUserModel?.customerName ?? ""}',
                           style: const TextStyle(color: GFColors.DANGER),
                         )
                       : const SizedBox()),
@@ -210,7 +211,7 @@ class _DetailOrderState extends State<DetailOrder> {
                           AppService().processEditStatusByIdOrder(
                               id: widget.orderWashModel.id,
                               status: 'Receive',
-                              idAdminReceive: widget.adminUserModel.id,
+                              idAdminReceive: widget.adminUserModel!.id,
                               idAdminOrder: widget.orderWashModel.idAdminOrder);
                         } else {
                           //order
@@ -220,12 +221,12 @@ class _DetailOrderState extends State<DetailOrder> {
                               status: 'Order',
                               idAdminReceive:
                                   widget.orderWashModel.idAdminReceive,
-                              idAdminOrder: widget.adminUserModel.id);
+                              idAdminOrder: widget.adminUserModel!.id);
                         }
                       },
                       text: 'บันทึก')
                 ],
-              ),
+              ) : const SizedBox(),
       ],
     );
   }
