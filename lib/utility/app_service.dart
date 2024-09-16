@@ -19,6 +19,16 @@ import 'package:testdb/widgets/widget_button.dart';
 class AppService {
   AppController appController = Get.put(AppController());
 
+  int calculateTotal({required List<OrderWashModel> orderWashModels}) {
+    int total = 0;
+
+    for (var element in orderWashModels) {
+      total = total + int.parse(element.total.trim());
+    }
+
+    return total;
+  }
+
   Future<List<OrderWashModel>> processReadOrderWhereStatus(
       {required String status}) async {
     String urlAPI =
