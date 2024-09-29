@@ -37,7 +37,11 @@ class AppController extends GetxController {
 
   RxList<UserModel> customerChatUserModels = <UserModel>[].obs;
 
-  RxList<TypeDetergenModel?> chooseTypeDetergenModels = <TypeDetergenModel?>[null].obs;
+  RxList<TypeDetergenModel?> chooseTypeDetergenModels =
+      <TypeDetergenModel?>[null].obs;
 
-  RxList<TypeSoftenerModel?> chooseTypeSoftenerModels = <TypeSoftenerModel?>[null].obs;
+  RxList<TypeSoftenerModel?> chooseTypeSoftenerModels =
+      <TypeSoftenerModel?>[null].obs;
+
+  RxBool changeTextField = false.obs;
 }

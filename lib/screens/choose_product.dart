@@ -20,9 +20,13 @@ class ChooseProduct extends StatefulWidget {
 class _ChooseProductState extends State<ChooseProduct> {
   AppController appController = Get.put(AppController());
 
+  var textControllers = <TextEditingController>[];
+
   @override
   void initState() {
     super.initState();
+
+    appController.changeTextField.value = false;
 
     if (appController.currentUserModels.isEmpty) {
       AppService().findCurrentUserLogin();
@@ -34,6 +38,7 @@ class _ChooseProductState extends State<ChooseProduct> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Baby Wash'),
+        actions: [orderButton()],
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -111,25 +116,35 @@ class _ChooseProductState extends State<ChooseProduct> {
           //     ),
           //   ],
           // ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text(
-                'รวมราคา :',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 8),
-              Obx(() => Text(
-                    '${(appController.optionWashClothes.value ? 40 : 0) + (appController.optionDryClothes.value ? 40 : 0) + (appController.chooseAmountCloths.last != null ? 5 * appController.chooseAmountCloths.last! : 0) + (appController.chooseAmountDetergent.last != null ? 10 * appController.chooseAmountDetergent.last! : 0) + (appController.chooseAmountSofterner.last != null ? 10 * appController.chooseAmountSofterner.last! : 0)} บาท',
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold),
-                  )),
-            ],
-          )
+          const SizedBox(height: 32),
+          // displayTotalPrice()
         ],
       ),
-      floatingActionButton: WidgetButton(
+      // floatingActionButton: orderButton(),
+    );
+  }
+
+  Row displayTotalPrice() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const Text(
+          'รวมราคา :',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 8),
+        Obx(() => Text(
+              '${(appController.optionWashClothes.value ? 40 : 0) + (appController.optionDryClothes.value ? 40 : 0) + (appController.chooseAmountCloths.last != null ? 5 * appController.chooseAmountCloths.last! : 0) + (appController.chooseAmountDetergent.last != null ? 10 * appController.chooseAmountDetergent.last! : 0) + (appController.chooseAmountSofterner.last != null ? 10 * appController.chooseAmountSofterner.last! : 0)} บาท',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            )),
+      ],
+    );
+  }
+
+  Widget orderButton() {
+    return Container(
+      margin: const EdgeInsets.only(right: 16),
+      child: WidgetButton(
           onPressed: () async {
             if ((appController.chooseStartWorkDateTimes.isEmpty) ||
                 (appController.chooseStartWorkHHmm.last == null)) {
@@ -137,14 +152,28 @@ class _ChooseProductState extends State<ChooseProduct> {
             } else if ((appController.chooseEndWorkDateTimes.isEmpty) ||
                 (appController.chooseEndWorkHHmm.last == null)) {
               Get.snackbar('เวลาส่งผ้า', 'กรุณาเลือกเวลาส่งผ้า');
-            } else if (appController.chooseAmountCloths.last == null) {
-              Get.snackbar('จำนวนเสื้อผ้า', 'กรุณาเลือกจำนวน เสื้อผ้าด้วย คะ');
-            } else if (appController.chooseAmountDetergent.last == null) {
-              Get.snackbar('น้ำยาซักผ้า', 'กรุณาเลือกน้ำยาซักผ้าด้วย คะ');
-            } else if (appController.chooseAmountSofterner.last == null) {
-              Get.snackbar(
-                  'น้ำยาปรับผ้านุ่ม', 'กรุณาเลือกน้ำยาปรับผ้านุ่มด้วย คะ');
+            } else if (!appController.changeTextField.value) {
+              Get.snackbar('ยังไม่ได้เลือกจำนวน', 'กรุณาเลือกจำนวนด้วย');
+            } else if (appController.chooseTypeDetergenModels.last == null) {
+              Get.snackbar('ย้งไม่ได้เลือกนำ้ยาซักผ้า', 'โปรดเลือกนำ้ยาซักผ้า');
+            } else if (appController.chooseTypeSoftenerModels.last == null) {
+              Get.snackbar('ยังไม่ได้เลือกน้ำยาปรับผ้านุ้ม',
+                  'โปรดเลือกน้ำยาปรับผ้านุ้ม');
             } else {
+              var amountCloth = <String>[];
+
+              int total = 0;
+
+              for (var i = 0; i < textControllers.length; i++) {
+                if (textControllers[i].text.isEmpty) {
+                  amountCloth.add('0');
+                } else {
+                  amountCloth.add(textControllers[i].text);
+                }
+              }
+
+              print('## amountCloth --> $amountCloth');
+
               OrderWashModel model = OrderWashModel(
                   id: '',
                   refWash: 'ref-${Random().nextInt(10000)}',
@@ -160,11 +189,10 @@ class _ChooseProductState extends State<ChooseProduct> {
                       dateTime: appController.chooseEndWorkHHmm.last!,
                       timeFormat: 'HH:mm'),
                   dry: appController.optionDryClothes.value.toString(),
-                  amountCloth: appController.chooseAmountCloths.last.toString(),
-                  detergen: appController.chooseAmountDetergent.last.toString(),
-                  softener: appController.chooseAmountSofterner.last.toString(),
-                  total:
-                      '${(appController.optionWashClothes.value ? 40 : 0) + (appController.optionDryClothes.value ? 40 : 0) + (appController.chooseAmountCloths.last != null ? 5 * appController.chooseAmountCloths.last! : 0) + (appController.chooseAmountDetergent.last != null ? 10 * appController.chooseAmountDetergent.last! : 0) + (appController.chooseAmountSofterner.last != null ? 10 * appController.chooseAmountSofterner.last! : 0)}',
+                  amountCloth: amountCloth.toString(),
+                  detergen: appController.chooseTypeDetergenModels.last!.id,
+                  softener: appController.chooseTypeSoftenerModels.last!.id,
+                  total: '',   
                   status: 'Order',
                   idAdminReceive: '',
                   idAdminOrder: '',
@@ -211,7 +239,8 @@ class _ChooseProductState extends State<ChooseProduct> {
                             appController.chooseTypeDetergenModels.add(value);
                           },
                           title: Text(typeDetergenModels[index].typeDetergen),
-                          subtitle: Text('ราคา ${typeDetergenModels[index].price} บาท'),
+                          subtitle: Text(
+                              'ราคา ${typeDetergenModels[index].price} บาท'),
                         ));
                   },
                 );
@@ -224,6 +253,7 @@ class _ChooseProductState extends State<ChooseProduct> {
       ),
     );
   }
+
   Widget aboutSoftener() {
     return Container(
       decoration: BoxDecoration(border: Border.all()),
@@ -255,7 +285,8 @@ class _ChooseProductState extends State<ChooseProduct> {
                             appController.chooseTypeSoftenerModels.add(value);
                           },
                           title: Text(typeSoftenerModels[index].typeSoftener),
-                          subtitle: Text('ราคา ${typeSoftenerModels[index].price} บาท'),
+                          subtitle: Text(
+                              'ราคา ${typeSoftenerModels[index].price} บาท'),
                         ));
                   },
                 );
@@ -287,6 +318,12 @@ class _ChooseProductState extends State<ChooseProduct> {
               if (snapshot.hasData) {
                 var typeClothsModels = snapshot.data!;
 
+                for (var element in typeClothsModels) {
+                  TextEditingController textEditingController =
+                      TextEditingController();
+                  textControllers.add(textEditingController);
+                }
+
                 return ListView.builder(
                   itemCount: typeClothsModels.length,
                   physics: const ScrollPhysics(),
@@ -300,10 +337,14 @@ class _ChooseProductState extends State<ChooseProduct> {
                         children: [
                           Text(
                               'จำนวน ${typeClothsModels[index].typeCloths} ชิ้นละ ${typeClothsModels[index].price} บาท'),
-                          const SizedBox(
+                          SizedBox(
                             width: 100,
                             child: WidgetForm(
+                              controller: textControllers[index],
                               keyboardType: TextInputType.number,
+                              onChanged: (p0) {
+                                appController.changeTextField.value = true;
+                              },
                             ),
                           ),
                         ],

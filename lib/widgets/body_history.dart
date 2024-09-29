@@ -70,18 +70,95 @@ class _BodyHistoryState extends State<BodyHistory> {
                         onChanged: (value) {},
                       ),
                       const Divider(),
-                      Text(
-                          'จำนวนเสื่อผ้า : ${appController.orderWashModels[index].amountCloth} ชิ้น'),
-                      Text(
-                          'ผงซักฝอก : ${appController.orderWashModels[index].detergen}'),
-                      Text(
-                          'น้ำยาปรับผ้่านุ้ม : ${appController.orderWashModels[index].softener}'),
-                      const Divider(),
-                      Text(
-                        'ค่าใช้จ่ายทั้งหมด : ${appController.orderWashModels[index].total} บาท',
+
+                      FutureBuilder(
+                        future: AppService().readAllTypeClothsFromAmountCloth(
+                            amountCloth: appController
+                                .orderWashModels[index].amountCloth),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var typeClothsModels = snapshot.data;
+
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Order :',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+
+                                SizedBox(
+                                  width: Get.width,
+                                  height: ((20 * typeClothsModels!.length).toDouble()),
+                                  child: ListView.builder(
+                                    itemCount: typeClothsModels.length,
+                                    physics: const ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return typeClothsModels[index].amount == 0 ?  const SizedBox() : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              '${typeClothsModels[index].typeCloths} (ราคา ${typeClothsModels[index].price} บาท/ช้ิน)'),
+                                          Text(typeClothsModels[index]
+                                              .amount
+                                              .toString()),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+
+                                 Text(
+                        'ค่าใช้จ่ายทั้งหมด : ${AppService().calculateGrandTotal(typeClothsModels: typeClothsModels)} บาท',
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w700),
                       ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+
+                      FutureBuilder(
+                        future: AppService().findDetenerFromString(
+                            id: appController.orderWashModels[index].detergen),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var typeDetenerModel = snapshot.data;
+
+                            return Text(
+                                'ผงซักฝอก : ${typeDetenerModel!.typeDetergen} (ราคา ${typeDetenerModel.price} บาท)');
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                      FutureBuilder(
+                        future: AppService().findSoftenerFromString(
+                            id: appController.orderWashModels[index].softener),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var typeSoftenerModel = snapshot.data;
+
+                            return Text(
+                                'น้ำยาปรับผ้่านุ้ม : ${typeSoftenerModel!.typeSoftener} (ราคา ${typeSoftenerModel.price} บาท)');
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+
+                      // Text(
+                      //     'น้ำยาปรับผ้่านุ้ม : ${appController.orderWashModels[index].softener}'),
+                      const Divider(),
+                     
                       appController.orderWashModels[index].status == 'Order'
                           ? const Text('รอรับผ้าก่อน แล้ว จะได้ QR พร้อมเพล์',
                               style: TextStyle(

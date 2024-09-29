@@ -24,6 +24,47 @@ import 'package:testdb/widgets/widget_button.dart';
 class AppService {
   AppController appController = Get.put(AppController());
 
+  int calculateGrandTotal({required List<TypeClothsModel> typeClothsModels}) {
+    int total = 0;
+
+    for (var element in typeClothsModels) {
+      total = total + (element.amount! * int.parse(element.price));
+    }
+
+    return total;
+  }
+
+  Future<TypeDetergenModel?> findDetenerFromString({required String id}) async {
+    TypeDetergenModel? typeDetergenModel;
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getDetergenWhereId.php?isAdd=true&id=$id';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      typeDetergenModel = TypeDetergenModel.fromMap(element);
+    }
+
+    return typeDetergenModel;
+  }
+
+  Future<TypeSoftenerModel?> findSoftenerFromString(
+      {required String id}) async {
+    TypeSoftenerModel? typeSoftenerModel;
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getSoftenerWhereId.php?isAdd=true&id=$id';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      typeSoftenerModel = TypeSoftenerModel.fromMap(element);
+    }
+
+    return typeSoftenerModel;
+  }
+
   Future<List<TypeClothsModel>> readAllTypeCloths() async {
     var typeClothsModels = <TypeClothsModel>[];
 
@@ -35,6 +76,43 @@ class AppService {
     for (var element in json.decode(result.data)) {
       TypeClothsModel model = TypeClothsModel.fromMap(element);
       typeClothsModels.add(model);
+    }
+
+    return typeClothsModels;
+  }
+
+  Future<List<TypeClothsModel>> readAllTypeClothsFromAmountCloth(
+      {required String amountCloth}) async {
+    String string = amountCloth.substring(1, amountCloth.length - 1);
+    var strings = string.split(',');
+
+    var amounts = <int>[];
+
+    for (var element in strings) {
+      amounts.add(int.parse(element.trim()));
+    }
+
+    var typeClothsModels = <TypeClothsModel>[];
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getAllTypeCloths.php';
+
+    var result = await Dio().get(urlAPI);
+
+    int index = 0;
+
+    for (var element in json.decode(result.data)) {
+      TypeClothsModel model = TypeClothsModel.fromMap(element);
+
+      Map<String, dynamic> map = model.toMap();
+
+      map['amount'] = amounts[index];
+
+      typeClothsModels.add(TypeClothsModel.fromMap(map));
+
+      if (index < amounts.length - 1) {
+        index++;
+      }
     }
 
     return typeClothsModels;
