@@ -8,6 +8,7 @@ import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/utility/app_dialog.dart';
 import 'package:testdb/utility/app_service.dart';
 import 'package:testdb/widgets/widget_button.dart';
+import 'package:testdb/widgets/widget_form.dart';
 
 class ChooseProduct extends StatefulWidget {
   const ChooseProduct({super.key});
@@ -81,78 +82,35 @@ class _ChooseProductState extends State<ChooseProduct> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('จำนวนเสื้อผ่า ชิ้นละ 5 บาท'),
-              SizedBox(
-                width: 100,
-                child: Obx(() => DropdownButton(
-                      hint: const Text('จำนวน'),
-                      value: appController.chooseAmountCloths.last,
-                      items: AppConstant.amountCloths
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.toString()),
-                              value: e,
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        appController.chooseAmountCloths.add(value);
-                      },
-                    )),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('น้ำยาซักผ้า 10 บาท'),
-              SizedBox(
-                width: 100,
-                child: Obx(() => DropdownButton(
-                      hint: const Text('จำนวน'),
-                      value: appController.chooseAmountDetergent.last,
-                      items: AppConstant.amountOption
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.toString()),
-                              value: e,
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        appController.chooseAmountDetergent.add(value);
-                      },
-                    )),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('น้ำยาปรับผ้านุ่ม 10 บาท'),
-              SizedBox(
-                width: 100,
-                child: Obx(() => DropdownButton(
-                      hint: const Text('จำนวน'),
-                      value: appController.chooseAmountSofterner.last,
-                      items: AppConstant.amountOption
-                          .map(
-                            (e) => DropdownMenuItem(
-                              child: Text(e.toString()),
-                              value: e,
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        appController.chooseAmountSofterner.add(value);
-                      },
-                    )),
-              ),
-            ],
-          ),
+          aboutCloths(),
+          const SizedBox(height: 16),
+          aboutDetergen(),
+          const SizedBox(height: 16),
+          aboutSoftener(),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     const Text('น้ำยาปรับผ้านุ่ม 10 บาท'),
+          //     SizedBox(
+          //       width: 100,
+          //       child: Obx(() => DropdownButton(
+          //             hint: const Text('จำนวน'),
+          //             value: appController.chooseAmountSofterner.last,
+          //             items: AppConstant.amountOption
+          //                 .map(
+          //                   (e) => DropdownMenuItem(
+          //                     child: Text(e.toString()),
+          //                     value: e,
+          //                   ),
+          //                 )
+          //                 .toList(),
+          //             onChanged: (value) {
+          //               appController.chooseAmountSofterner.add(value);
+          //             },
+          //           )),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -219,6 +177,148 @@ class _ChooseProductState extends State<ChooseProduct> {
             }
           },
           text: 'Order'),
+    );
+  }
+
+  Widget aboutDetergen() {
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'เลือกน้ำยาซักผ้า',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          FutureBuilder(
+            future: AppService().readAllTypeDetergen(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var typeDetergenModels = snapshot.data;
+
+                return ListView.builder(
+                  itemCount: typeDetergenModels!.length,
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Obx(() => RadioListTile(
+                          value: typeDetergenModels[index],
+                          groupValue:
+                              appController.chooseTypeDetergenModels.last,
+                          onChanged: (value) {
+                            appController.chooseTypeDetergenModels.add(value);
+                          },
+                          title: Text(typeDetergenModels[index].typeDetergen),
+                          subtitle: Text('ราคา ${typeDetergenModels[index].price} บาท'),
+                        ));
+                  },
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+  Widget aboutSoftener() {
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'เลือกน้ำยาปรับผ้านุ้ม',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          FutureBuilder(
+            future: AppService().readAllTypeSoftener(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var typeSoftenerModels = snapshot.data;
+
+                return ListView.builder(
+                  itemCount: typeSoftenerModels!.length,
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Obx(() => RadioListTile(
+                          value: typeSoftenerModels[index],
+                          groupValue:
+                              appController.chooseTypeSoftenerModels.last,
+                          onChanged: (value) {
+                            appController.chooseTypeSoftenerModels.add(value);
+                          },
+                          title: Text(typeSoftenerModels[index].typeSoftener),
+                          subtitle: Text('ราคา ${typeSoftenerModels[index].price} บาท'),
+                        ));
+                  },
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget aboutCloths() {
+    return Container(
+      decoration: BoxDecoration(border: Border.all()),
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'เลือกจำนวน และ ชนิดเสื้อผ้า',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          FutureBuilder(
+            future: AppService().readAllTypeCloths(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var typeClothsModels = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: typeClothsModels.length,
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              'จำนวน ${typeClothsModels[index].typeCloths} ชิ้นละ ${typeClothsModels[index].price} บาท'),
+                          const SizedBox(
+                            width: 100,
+                            child: WidgetForm(
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 

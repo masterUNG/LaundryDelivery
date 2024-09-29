@@ -3,6 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:testdb/models/message_model.dart';
 import 'package:testdb/models/order_wash_model.dart';
+import 'package:testdb/models/type_detergen_model.dart';
+import 'package:testdb/models/type_softener_model.dart';
 import 'package:testdb/models/user_model.dart';
 
 class AppController extends GetxController {
@@ -34,4 +36,8 @@ class AppController extends GetxController {
   RxList<MessageModel> messageModels = <MessageModel>[].obs;
 
   RxList<UserModel> customerChatUserModels = <UserModel>[].obs;
+
+  RxList<TypeDetergenModel?> chooseTypeDetergenModels = <TypeDetergenModel?>[null].obs;
+
+  RxList<TypeSoftenerModel?> chooseTypeSoftenerModels = <TypeSoftenerModel?>[null].obs;
 }

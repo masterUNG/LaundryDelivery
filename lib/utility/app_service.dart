@@ -11,6 +11,9 @@ import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:testdb/models/message_model.dart';
 import 'package:testdb/models/order_wash_model.dart';
+import 'package:testdb/models/type_cloths_model.dart';
+import 'package:testdb/models/type_detergen_model.dart';
+import 'package:testdb/models/type_softener_model.dart';
 import 'package:testdb/models/user_model.dart';
 import 'package:testdb/screens/admin_page.dart';
 import 'package:testdb/screens/main_home.dart';
@@ -20,6 +23,54 @@ import 'package:testdb/widgets/widget_button.dart';
 
 class AppService {
   AppController appController = Get.put(AppController());
+
+  Future<List<TypeClothsModel>> readAllTypeCloths() async {
+    var typeClothsModels = <TypeClothsModel>[];
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getAllTypeCloths.php';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      TypeClothsModel model = TypeClothsModel.fromMap(element);
+      typeClothsModels.add(model);
+    }
+
+    return typeClothsModels;
+  }
+
+  Future<List<TypeDetergenModel>> readAllTypeDetergen() async {
+    var typeDetergenModels = <TypeDetergenModel>[];
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getAllTypeDetergen.php';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      TypeDetergenModel model = TypeDetergenModel.fromMap(element);
+      typeDetergenModels.add(model);
+    }
+
+    return typeDetergenModels;
+  }
+
+  Future<List<TypeSoftenerModel>> readAllTypeSoftener() async {
+    var typeSoftenerModels = <TypeSoftenerModel>[];
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getAllTypeSoftener.php';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      TypeSoftenerModel model = TypeSoftenerModel.fromMap(element);
+      typeSoftenerModels.add(model);
+    }
+
+    return typeSoftenerModels;
+  }
 
   Future<void> processReadAllMessageCustomer() async {
     if (appController.customerChatUserModels.isNotEmpty) {
