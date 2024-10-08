@@ -69,7 +69,12 @@ class _BodyHistoryState extends State<BodyHistory> {
                         controlAffinity: ListTileControlAffinity.leading,
                         onChanged: (value) {},
                       ),
+
                       const Divider(),
+
+
+
+
 
                       FutureBuilder(
                         future: AppService().readAllTypeClothsFromAmountCloth(
@@ -126,6 +131,11 @@ class _BodyHistoryState extends State<BodyHistory> {
                         },
                       ),
 
+
+
+
+
+
                       FutureBuilder(
                         future: AppService().findDetenerFromString(
                             id: appController.orderWashModels[index].detergen),
@@ -140,6 +150,7 @@ class _BodyHistoryState extends State<BodyHistory> {
                           }
                         },
                       ),
+                      
                       FutureBuilder(
                         future: AppService().findSoftenerFromString(
                             id: appController.orderWashModels[index].softener),
