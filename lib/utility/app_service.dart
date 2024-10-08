@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:testdb/models/message_model.dart';
+import 'package:testdb/models/news_model.dart';
 import 'package:testdb/models/order_wash_model.dart';
 import 'package:testdb/models/type_cloths_model.dart';
 import 'package:testdb/models/type_detergen_model.dart';
@@ -523,5 +524,50 @@ class AppService {
     }
 
     return userModels;
+  }
+
+  Future<void> processAddNews({
+    required String post,
+    required String timePost,
+  }) async {
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/insertNews.php?isAdd=true&post=$post&timePost=$timePost';
+
+    await Dio().get(urlAPI);
+  }
+
+  Future<List<NewsModel>> processReadAllNews() async {
+    var newsModels = <NewsModel>[];
+
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/getAllNews.php';
+
+    var result = await Dio().get(urlAPI);
+
+    for (var element in json.decode(result.data)) {
+      NewsModel model = NewsModel.fromMap(element);
+      newsModels.add(model);
+    }
+
+    return newsModels;
+  }
+
+  Future<void> processAddProduct({
+    required String typeCloth,
+    required String price,
+  }) async {
+    String urlAPI =
+        'https://www.androidthai.in.th/fluttertraining/UngFew/insertTypeCloth.php?isAdd=true&typeCloths=$typeCloth&price=$price';
+
+    await Dio().get(urlAPI);
+  }
+
+  Future<void> processAddDetergen({
+    required String typeDetergen,
+    required String price,
+  }) async {
+    String urlAPI = 'https://www.androidthai.in.th/fluttertraining/UngFew/insertTypeDetergen.php?isAdd=true&typeDetergen=$typeDetergen&price=$price';
+
+    await Dio().get(urlAPI);
   }
 }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:testdb/screens/list_detergen.dart';
+import 'package:testdb/screens/list_produt.dart';
+import 'package:testdb/screens/list_softener.dart';
 import 'package:testdb/utility/app_controller.dart';
 import 'package:testdb/widgets/body_list_customer_owner.dart';
 import 'package:testdb/widgets/body_list_history_owner.dart';
 import 'package:testdb/widgets/body_list_officer_owner.dart';
 import 'package:testdb/widgets/body_list_income_owner.dart';
+import 'package:testdb/widgets/body_news.dart';
+import 'package:testdb/widgets/widget_button.dart';
 import 'package:testdb/widgets/widget_signout.dart';
 
 class MainHomeOwnerShop extends StatefulWidget {
@@ -55,9 +60,47 @@ class _MainHomeOwnerShopState extends State<MainHomeOwnerShop> {
     return Obx(() => Scaffold(
           appBar: AppBar(
             title: Text(titles[appController.indexBody.value]),
-            actions: const [
-              WidgetSignOut(),
-            ],
+          ),
+          endDrawer: Drawer(
+            child: Column(
+              children: [
+                const UserAccountsDrawerHeader(
+                    accountName: Text('Admin'), accountEmail: Text('Only')),
+                ListTile(
+                  leading: const Icon(Icons.post_add),
+                  title: const Text('Post'),
+                  onTap: () {
+                    Get.to(const BodyNews());
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.post_add),
+                  title: const Text('ผลิดภัณท์'),
+                  onTap: () {
+                    Get.to(const ListProdut());
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.post_add),
+                  title: const Text('ผงซักฝอก'),
+                  onTap: () {
+                    Get.to(const ListDetergen());
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.post_add),
+                  title: const Text('น้ำยาปรับผ้านุ่ม'),
+                  onTap: () {
+                    Get.to(const ListSoftener());
+                  },
+                ),
+                const Spacer(),
+                const ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: WidgetSignOut(),
+                ),
+              ],
+            ),
           ),
           body: bodys[appController.indexBody.value],
           bottomNavigationBar: BottomNavigationBar(
